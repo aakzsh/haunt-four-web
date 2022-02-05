@@ -130,6 +130,7 @@ function Disc(player){
   var $this = this;
   document.onmousemove = function(evt){
     if(currentPlayer == 1){
+    
     currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
     if(currentCol<0){currentCol=0;}
     if(currentCol>6){currentCol=6;}
@@ -139,6 +140,7 @@ function Disc(player){
   }
   document.onload = function(evt){
     if(currentPlayer == 1){
+
     currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
     if(currentCol<0){currentCol=0;}
     if(currentCol>6){currentCol=6;}
