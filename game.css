@@ -40,7 +40,7 @@ nav {
 
 .disc{
   position:absolute;
-  z-index:-1;
+  z-index:1;
   top:-55px;
   left:14px;
   width:46px;
@@ -69,7 +69,7 @@ nav {
   width:434px;
   height:374px;
   margin:0 auto;
-  /* background-color: #343232; */
+  background-color: #343232;
   position:relative;
 }
 
