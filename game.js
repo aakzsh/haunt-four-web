@@ -8,6 +8,8 @@ var currentRow;
 var currentPlayer;
 var id = 1;
 
+const turn = document.querySelector(".turn")
+
 let model = null;
 
 const video = document.querySelector('video');
@@ -67,14 +69,6 @@ const stopWebCam = ()=>{
     video.srcObject = null;
     }
 
-start.addEventListener('click', () => {
-    // startWebCam()
-})
-
-
-stopBtn.addEventListener('click', () => {
-    stopWebCam()
-})
 
 newgame();
 
@@ -183,6 +177,8 @@ function Disc(player){
     if(currentPlayer==2){
       //computer move
       bar.style.backgroundColor = this.color
+      turn.textContent = "Bot's turn"
+
       setTimeout(()=> {
 
           var possibleMoves = think();
@@ -293,7 +289,8 @@ function placeDisc(player){
   var disc = new Disc(player);
   disc.addToScene();
   if(currentPlayer == 1){
-
+    bar.style.backgroundColor = "white"
+    turn.textContent = "Your turn"
     n = setInterval(() => {disc.runDetection()}, 1000);
   }
 }
@@ -308,7 +305,6 @@ function prepareField(){
       gameField[i].push(0);
     }
   }
-
 }
 
 function moveit(who,where){

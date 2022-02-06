@@ -9,7 +9,7 @@
 
 body {
     background-color: black;
-    background-image: url('assets/bg.png');
+    background-image: url('assets/home.png');
     color: white;
     font-family: 'Poppins', 'sans-serif';
     background-repeat: no-repeat;
@@ -32,6 +32,14 @@ nav {
 
 h5 {
     font-family: 'Poppins', 'sans-serif';
+    color: brown;
+    font-size: 2rem;
+}
+
+h1 {
+    font-family: 'Creepster', 'sans-serif';
+    font-size: 4.5rem;
+    letter-spacing: 0.25rem;
 }
 
 button {
@@ -39,12 +47,19 @@ button {
     border: none;
     padding: 0.5rem 1rem;
     color: white;
+    font-size: 1rem;
+    border-radius: 5px;
 
 }
 
+p {
+    color: #989898;
+    font-size: 1.5rem;
+}
+
 .container {
-    width: 40%;
+    width: 50%;
     height: 100vh;
     margin-top: 8rem;
-    margin-left: 2rem;
+    margin-left: 3rem;
 }
