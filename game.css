@@ -73,3 +73,13 @@ nav {
   position:relative;
 }
 
+section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+video {
+    width: 434px !important;
+    height: auto !important;
+}

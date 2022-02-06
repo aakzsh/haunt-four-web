@@ -1,10 +1,55 @@
+
+
 var gameField = new Array();
 var board = document.getElementById("game-table");
 var bar = document.querySelector(".bar");
-var currentCol;
+var currentCol = 0;
 var currentRow;
 var currentPlayer;
 var id = 1;
+
+let model = null;
+
+const video = document.querySelector('video');
+const start = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const isVideo = false;
+
+//declarations
+let modelParams = {
+    flipHorizontal: true,   
+    imageScaleFactor: 0.7,  
+    maxNumBoxes: 20,        
+    iouThreshold: 0.5,      
+    scoreThreshold: 0.79,    
+  }
+
+
+//load model
+handTrack.load(modelParams).then((lmodel) => {
+    model = lmodel;
+  
+});
+
+
+
+
+
+const stopWebCam = ()=>{
+    let stream = video.srcObject;
+    let tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
+    video.srcObject = null;
+    }
+
+start.addEventListener('click', () => {
+    // startWebCam()
+})
+
+
+stopBtn.addEventListener('click', () => {
+    stopWebCam()
+})
 
 newgame();
 
@@ -128,33 +173,85 @@ function Disc(player){
   }
   
   var $this = this;
-  document.onmousemove = function(evt){
-    if(currentPlayer == 1){
+  // document.onmousemove = function(evt){
+  //   if(currentPlayer == 1){
     
-    currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
-    if(currentCol<0){currentCol=0;}
-    if(currentCol>6){currentCol=6;}
-    document.getElementById('d'+$this.id).style.left = (14+60*currentCol)+"px";
-    document.getElementById('d'+$this.id).style.top = "-55px";
-    }
-  }
+  //   currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
+  //   if(currentCol<0){currentCol=0;}
+  //   if(currentCol>6){currentCol=6;}
+  //   document.getElementById('d'+$this.id).style.left = (14+60*currentCol)+"px";
+  //   document.getElementById('d'+$this.id).style.top = "-55px";
+  //   }
+  // }
+
+  
   document.onload = function(evt){
     if(currentPlayer == 1){
 
-    currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
-    if(currentCol<0){currentCol=0;}
-    if(currentCol>6){currentCol=6;}
-    document.getElementById('d'+$this.id).style.left = (14+60*currentCol)+"px";
-    document.getElementById('d'+$this.id).style.top = "-55px";
+      currentCol = Math.floor((evt.clientX - board.offsetLeft)/60);
+      if(currentCol<0){currentCol=0;}
+      if(currentCol>6){currentCol=6;}
+      document.getElementById('d'+$this.id).style.left = (14+60*currentCol)+"px";
+      document.getElementById('d'+$this.id).style.top = "-55px";
     }
   }
+
+  this.runDetection = function() {
+    model.detect(video)
+      .then(predictions => {
+        console.log(predictions)
+  
+        if (predictions.length ==0){
+          console.log("hh")
+          if(currentPlayer == 1){
+            if(possibleColumns().indexOf(currentCol) != -1){
+              console.log($this.id, $this.player)
+              dropDisc($this.id,$this.player);
+            }
+          }
+        }
+
+        if (predictions.length != 0 && predictions[0].label == 'face'){
+          if(currentPlayer == 1){
+            
+            console.log("1")
+    
+            currentCol = (currentCol+1) % 7;
+            
+            document.getElementById('d'+$this.id).style.left = (14+60*currentCol)+"px";
+            document.getElementById('d'+$this.id).style.top = "-55px";
+        }
+        }
+      })
+  }
+
+ 
+  
+  handTrack.startVideo(video).then(function (status) {
+    console.log("video started", status);
+    if (status) {
+      
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream
+          setInterval(() => {
+            $this.runDetection()
+           
+          }, 1000)
+        })
+        .catch(error => console.log(error));
+  
+      
+    }
+  });
+  
   
   document.onclick = function(evt){
-    if(currentPlayer == 1){
-      if(possibleColumns().indexOf(currentCol) != -1){
-        dropDisc($this.id,$this.player);
-      }
-    }
+    // if(currentPlayer == 1){
+    //   if(possibleColumns().indexOf(currentCol) != -1){
+    //     dropDisc($this.id,$this.player);
+    //   }
+    // }
   }
 }
 
@@ -170,7 +267,7 @@ function checkForMoveVictory(){
     placeDisc(3-currentPlayer);
   } else {
     var ww = currentPlayer == 2 ? 'Computer' : 'Player';
-    placeDisc(3-currentPlayer);
+     placeDisc(3-currentPlayer);
     alert(ww+" win!");
     board.innerHTML = "";
     newgame();
